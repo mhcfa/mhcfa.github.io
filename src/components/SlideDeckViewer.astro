@@ -1,0 +1,320 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  pdfUrl: string;
+  xlsxUrl: string;
+  xlsxLabel?: string;
+  slideCount: number;
+  slidePrefix: string;
+}
+
+const {
+  title,
+  subtitle,
+  pdfUrl,
+  xlsxUrl,
+  xlsxLabel = "Download Excel Model (.xlsx)",
+  slideCount,
+  slidePrefix,
+} = Astro.props;
+
+const slides = Array.from({ length: slideCount }, (_, i) => {
+  const num = String(i + 1).padStart(2, "0");
+  return `${slidePrefix}${num}.png`;
+});
+---
+
+<section class="deck-box" data-slides={JSON.stringify(slides)}>
+  <div class="deck-header">
+    <div>
+      <div class="deck-eyebrow">Unedited Autonomous Deliverables</div>
+      <h3 class="deck-title">{title}</h3>
+      {subtitle && <p class="deck-subtitle">{subtitle}</p>}
+    </div>
+    <div class="deck-actions">
+      <a href={xlsxUrl} download class="deck-btn deck-btn-primary">
+        <span>📊</span>
+        <span>{xlsxLabel}</span>
+      </a>
+      <a href={pdfUrl} target="_blank" rel="noopener" class="deck-btn">
+        <span>📄</span>
+        <span>Open Full PDF ({slideCount} Slides) ↗</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="deck-stage">
+    <img
+      id="deck-active-img"
+      src={slides[0]}
+      alt={`Slide 1 of ${slideCount}`}
+      loading="eager"
+    />
+  </div>
+
+  <div class="deck-controls">
+    <button type="button" id="deck-prev" class="deck-nav-btn" aria-label="Previous slide">
+      ← Prev
+    </button>
+    <div class="deck-counter">
+      Slide <span id="deck-current-num">1</span> of {slideCount}
+      <span class="deck-hint">(use ← / → keys or click thumbnails)</span>
+    </div>
+    <button type="button" id="deck-next" class="deck-nav-btn" aria-label="Next slide">
+      Next →
+    </button>
+  </div>
+
+  <div class="deck-thumbs" id="deck-thumbs">
+    {slides.map((src, idx) => (
+      <button
+        type="button"
+        class={`deck-thumb ${idx === 0 ? "active" : ""}`}
+        data-index={idx}
+        aria-label={`Go to slide ${idx + 1}`}
+      >
+        <img src={src} alt={`Slide ${idx + 1} thumbnail`} loading="lazy" />
+        <span>{idx + 1}</span>
+      </button>
+    ))}
+  </div>
+</section>
+
+<style>
+  .deck-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin: 1.75rem 0 2.25rem;
+  }
+
+  .deck-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .deck-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.73rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .deck-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .deck-subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .deck-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .deck-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.5rem 0.85rem;
+    border-radius: 7px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
+    color: var(--text);
+    transition: all 0.15s ease;
+  }
+
+  .deck-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .deck-btn-primary {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+  }
+
+  .deck-btn-primary:hover {
+    opacity: 0.92;
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] .deck-btn-primary {
+    color: #0e1013;
+    font-weight: 600;
+  }
+
+  .deck-stage {
+    background: #111317;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .deck-stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+  }
+
+  .deck-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.85rem;
+    gap: 0.75rem;
+  }
+
+  .deck-nav-btn {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .deck-nav-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .deck-counter {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .deck-hint {
+    color: var(--text-faint);
+    font-size: 0.74rem;
+    margin-left: 0.35rem;
+  }
+
+  .deck-thumbs {
+    display: flex;
+    gap: 0.45rem;
+    overflow-x: auto;
+    margin-top: 0.85rem;
+    padding-bottom: 0.35rem;
+  }
+
+  .deck-thumb {
+    position: relative;
+    flex: 0 0 88px;
+    padding: 0;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    background: #111317;
+    cursor: pointer;
+    overflow: hidden;
+    opacity: 0.65;
+    transition: all 0.15s ease;
+  }
+
+  .deck-thumb:hover,
+  .deck-thumb.active {
+    opacity: 1;
+    border-color: var(--accent);
+  }
+
+  .deck-thumb img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+  }
+
+  .deck-thumb span {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 0 4px;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 640px) {
+    .deck-hint {
+      display: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const box = document.querySelector(".deck-box");
+    if (!box) return;
+    const slides = JSON.parse(box.getAttribute("data-slides") || "[]");
+    if (!slides.length) return;
+
+    let current = 0;
+    const imgEl = document.getElementById("deck-active-img");
+    const numEl = document.getElementById("deck-current-num");
+    const prevBtn = document.getElementById("deck-prev");
+    const nextBtn = document.getElementById("deck-next");
+    const thumbBtns = Array.from(box.querySelectorAll(".deck-thumb"));
+
+    function setSlide(index) {
+      current = (index + slides.length) % slides.length;
+      if (imgEl) {
+        imgEl.setAttribute("src", slides[current]);
+        imgEl.setAttribute("alt", `Slide ${current + 1} of ${slides.length}`);
+      }
+      if (numEl) numEl.textContent = String(current + 1);
+      thumbBtns.forEach((b, i) => {
+        b.classList.toggle("active", i === current);
+      });
+    }
+
+    prevBtn?.addEventListener("click", () => setSlide(current - 1));
+    nextBtn?.addEventListener("click", () => setSlide(current + 1));
+    thumbBtns.forEach((b, i) => {
+      b.addEventListener("click", () => setSlide(i));
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") setSlide(current - 1);
+      if (e.key === "ArrowRight") setSlide(current + 1);
+    });
+  })();
+</script>

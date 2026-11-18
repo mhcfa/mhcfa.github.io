@@ -1,0 +1,116 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+function formatDate(d: Date) {
+  return d.toISOString().slice(0, 10);
+}
+---
+
+<BaseLayout title="mhcfa — Financial Analysis as Code & Autonomous Equity Research">
+  <section class="hero">
+    <div class="hero-eyebrow">Financial Engineering · AI Agents · Open Source</div>
+    <h1>Financial models as compiled code, not hand-edited spreadsheets.</h1>
+    <p>
+      I am a CFA charterholder working in private M&amp;A and project finance. I build open-source
+      compilers and autonomous multi-agent workflows that turn institutional financial modeling and
+      equity valuation into verifiable software.
+    </p>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Writing &amp; Research Findings</h2>
+    </div>
+    <div class="posts-list">
+      {posts.map((post) => (
+        <article class="post-card">
+          <div class="post-card-meta">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            {post.data.readingTime && (
+              <>
+                <span>·</span>
+                <span>{post.data.readingTime}</span>
+              </>
+            )}
+            {post.data.featured && (
+              <span class="badge badge-red">Featured Research</span>
+            )}
+          </div>
+          <h3>
+            <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+          </h3>
+          <p>{post.data.description}</p>
+          <div class="tag-list">
+            {post.data.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="section-header">
+      <h2 class="section-title">Open-Source Projects</h2>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div>
+          <div class="project-top">
+            <h3 class="project-name">
+              <a href="https://github.com/mhcfa/f8" target="_blank" rel="noopener">
+                mhcfa/f8 ↗
+              </a>
+            </h3>
+            <span class="badge badge-green">Rust · Python · TypeScript</span>
+          </div>
+          <p class="project-desc">
+            Author, verify, and automate financial models with code and AI agents, compiled into
+            live Excel (<code>.xlsx</code>) workbooks. Features a semantic 2D DSL, 6-pass Rust
+            compiler with Tarjan DAG cycle detection, in-memory formula evaluation, and verified
+            Excel parity across 34 functions.
+          </p>
+        </div>
+        <div class="project-meta">
+          <a href="https://github.com/mhcfa/f8" target="_blank" rel="noopener">GitHub Repo</a>
+          <a href="https://pypi.org/project/f8-engine/" target="_blank" rel="noopener">PyPI: f8-engine</a>
+          <a href="https://www.npmjs.com/package/f8-engine" target="_blank" rel="noopener">npm: f8-engine</a>
+          <a href="/deliverables/f8/lbo_model.xlsx" download>Sample LBO (.xlsx)</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div>
+          <div class="project-top">
+            <h3 class="project-name">
+              <a href="/blog/autonomous-costco-equity-research/">
+                mhcfa/faac
+              </a>
+            </h3>
+            <span class="badge">Open-Sourcing Soon</span>
+          </div>
+          <p class="project-desc">
+            <strong>Financial Analysis as Code (FAAC)</strong> — Institutional 3-statement financial
+            models, DCF valuations, and pitchbooks generated end-to-end by autonomous multi-agent AI
+            workflows with SHA-256 SEC EDGAR provenance and compiled with <code>f8-engine</code>.
+          </p>
+        </div>
+        <div class="project-meta">
+          <a href="/blog/autonomous-costco-equity-research/">Costco (COST) Research Write-Up</a>
+          <a href="/deliverables/costco/costco-valuation.xlsx" download>Costco Excel (.xlsx)</a>
+          <a href="/deliverables/costco/costco-equity-valuation.pdf" target="_blank" rel="noopener">
+            Costco Pitchbook (.pdf)
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

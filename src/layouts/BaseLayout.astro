@@ -1,0 +1,90 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "Financial Analysis as Code, Autonomous Equity Research, and Open-Source Financial Infrastructure by mhcfa.",
+} = Astro.props;
+
+const pathname = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = stored || (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="/" class="brand">
+          <span>mhcfa</span>
+          <span class="brand-tag">CFA · Financial Analysis as Code</span>
+        </a>
+        <nav class="nav-links">
+          <a href="/" class={pathname === "/" ? "active" : ""}>Writing</a>
+          <a href="/#projects">Projects</a>
+          <a href="https://github.com/mhcfa/f8" target="_blank" rel="noopener">f8 ↗</a>
+          <a href="https://github.com/mhcfa" target="_blank" rel="noopener">GitHub ↗</a>
+          <button id="theme-toggle" class="theme-btn" type="button" aria-label="Toggle theme">
+            Theme
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <span>© {new Date().getFullYear()} mhcfa · Built with Astro & GitHub Pages</span>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <a href="https://github.com/mhcfa/f8" target="_blank" rel="noopener">github.com/mhcfa/f8</a>
+          <span>·</span>
+          <a href="https://www.npmjs.com/package/f8-engine" target="_blank" rel="noopener">npm: f8-engine</a>
+          <span>·</span>
+          <a href="https://pypi.org/project/f8-engine/" target="_blank" rel="noopener">PyPI: f8-engine</a>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      const btn = document.getElementById("theme-toggle");
+      function updateLabel() {
+        const current = document.documentElement.getAttribute("data-theme");
+        if (btn) btn.textContent = current === "dark" ? "Light" : "Dark";
+      }
+      updateLabel();
+      btn?.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+        updateLabel();
+      });
+    </script>
+  </body>
+</html>
