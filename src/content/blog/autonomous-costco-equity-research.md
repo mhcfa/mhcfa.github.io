@@ -1,5 +1,5 @@
 ---
-title: "Running an Autonomous Agent on Costco Equity Research: Why It Called a Short (and the 0.22 Beta Puzzle)"
+title: "Running an Autonomous Agent on Costco Equity Research: Why It Called a Short"
 subtitle: "In a 4-hour overnight run with zero human intervention, a 22-agent workflow ingested 50 SEC/macro filings, compiled a 6,500-cell live Excel model with f8-engine, and initiated Costco as a $617.94 Short—exposing a fascinating discount-rate puzzle."
 description: "What happened when I gave an autonomous multi-agent workflow a three-sentence prompt to value Costco (NASDAQ: COST): 4,228 live Excel formulas, a 21-slide pitchbook, a $617.94 Short call, and a 0.22 2-year beta hidden in the audited data."
 pubDate: 2026-11-18
@@ -74,14 +74,14 @@ During modeling, however, `models/kg.ts` and `models/valuation/wacc.ts` bound `W
 
 If you evaluate the exact same compiled `f8-engine` model (`models/index.ts`) replacing `0.85` with Walmart's 5Y beta (`0.53`) or Costco's 2Y weekly beta (`0.22`)—holding all operating cash flows, `Rf = 5.15%`, and terminal parameters constant—here is what happens:
 
-| Beta Basis | Scenario | Cost of Equity (`Ke`) | Blended `WACC` | Terminal `g` | `WACC - g` Spread | Perp DCF (`50%`) | Exit DCF (`25%`) | Comps (`25%`) | **Blended Target (Cum-Div)** |
-| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| **`0.85` (5Y Monthly — Model Used)** | `Base` | `8.98%` | `8.90%` | `3.50%` | `5.40%` | `$421.87` | `$742.98` | `$885.06` | **`$617.94`** |
-| **`0.85` (5Y Monthly — Model Used)** | `Bull` | `8.76%` | `8.70%` | `3.80%` | `4.90%` | `$578.59` | `$1,016.73` | `$1,023.94` | **`$799.46`** |
-| **`0.53` (WMT 5Y Benchmark)** | `Base` | `7.54%` | `7.49%` | `3.50%` | `3.99%` | `$564.69` | `$830.30` | `$885.06` | **`$711.18`** |
-| **`0.53` (WMT 5Y Benchmark)** | `Bull` | `7.40%` | `7.36%` | `3.80%` | `3.56%` | `$794.61` | `$1,132.47` | `$1,023.94` | **`$936.41`** |
-| **`0.22` (2Y Weekly — In Audited Data)** | `Base` | `6.14%` | `6.11%` | `3.50%` | `2.61%` | **`$852.16`** | **`$927.18`** | `$885.06` | **`$879.14`** |
-| **`0.22` (2Y Weekly — In Audited Data)** | `Bull` | `6.08%` | `6.06%` | `3.80%` | `2.26%` | **`$1,250.55`** | **`$1,260.02`** | `$1,023.94` | **`$1,196.26`** |
+| Beta Basis                               | Scenario | Cost of Equity (`Ke`) | Blended `WACC` | Terminal `g` | `WACC - g` Spread | Perp DCF (`50%`) | Exit DCF (`25%`) | Comps (`25%`) | **Blended Target (Cum-Div)** |
+| :--------------------------------------- | :------- | --------------------: | -------------: | -----------: | ----------------: | ---------------: | ---------------: | ------------: | ---------------------------: |
+| **`0.85` (5Y Monthly — Model Used)**     | `Base`   |               `8.98%` |        `8.90%` |      `3.50%` |           `5.40%` |        `$421.87` |        `$742.98` |     `$885.06` |                **`$617.94`** |
+| **`0.85` (5Y Monthly — Model Used)**     | `Bull`   |               `8.76%` |        `8.70%` |      `3.80%` |           `4.90%` |        `$578.59` |      `$1,016.73` |   `$1,023.94` |                **`$799.46`** |
+| **`0.53` (WMT 5Y Benchmark)**            | `Base`   |               `7.54%` |        `7.49%` |      `3.50%` |           `3.99%` |        `$564.69` |        `$830.30` |     `$885.06` |                **`$711.18`** |
+| **`0.53` (WMT 5Y Benchmark)**            | `Bull`   |               `7.40%` |        `7.36%` |      `3.80%` |           `3.56%` |        `$794.61` |      `$1,132.47` |   `$1,023.94` |                **`$936.41`** |
+| **`0.22` (2Y Weekly — In Audited Data)** | `Base`   |               `6.14%` |        `6.11%` |      `3.50%` |           `2.61%` |    **`$852.16`** |    **`$927.18`** |     `$885.06` |                **`$879.14`** |
+| **`0.22` (2Y Weekly — In Audited Data)** | `Bull`   |               `6.08%` |        `6.06%` |      `3.80%` |           `2.26%` |  **`$1,250.55`** |  **`$1,260.02`** |   `$1,023.94` |              **`$1,196.26`** |
 
 At `Beta = 0.22`, the Gordon Growth denominator (`WACC - g`) cuts in half (from `5.40%` to `2.61%` in Base, and from `4.90%` to `2.26%` in Bull). That shifts the Base–Bull Blended valuation range to **`$879.14 – $1,196.26`** (midpoint **`$1,037.70`**, and Perpetuity DCF midpoint **`$1,051.36`**)—landing right on top of the **`$1,081` Street consensus price target** and the **`$1,076.21` ex-dividend (`$1,106.21` cum-dividend) market price**.
 
@@ -110,24 +110,24 @@ The entire run executed on **Gemini 4 Hydrogen (XHigh)** across **1 Lead Orchest
 
 At standard API rates for `gemini-4-hydrogen` (**$1.50 / 1M** uncached input, **$0.075 / 1M** cached input, **$7.50 / 1M** output including thinking tokens), the entire 4-hour engagement cost **$70.28**:
 
-| Token Category | Token Count | Rate (per 1M) | Lead Orchestrator | 21 Subagents | **Total Cost** |
-| :--- | ---: | ---: | ---: | ---: | ---: |
-| **Uncached Input (`input_tokens`)** | 19,745,996 | $1.50 | $10.08 | $19.54 | **$29.62** |
-| **Cached Input (`cache_read_tokens`)** | 296,515,610 | $0.075 | $3.15 | $19.09 | **$22.24** |
-| **Output (`output_tokens`)** | 2,456,922 | $7.50 | $2.09 | $16.33 | **$18.43** |
-| ├─ _Internal Thinking Tokens_ | _1,124,298_ | _$7.50_ | _$1.32_ | _$7.11_ | _**(~$8.43)**_ |
-| └─ _Response & Tool-Call Tokens_ | _1,332,624_ | _$7.50_ | _$0.77_ | _$9.23_ | _**(~$10.00)**_ |
-| **Total** | **318,718,528** | — | **$15.32** _(22%)_ | **$54.96** _(78%)_ | **$70.28** |
+| Token Category                         |     Token Count | Rate (per 1M) |  Lead Orchestrator |       21 Subagents |  **Total Cost** |
+| :------------------------------------- | --------------: | ------------: | -----------------: | -----------------: | --------------: |
+| **Uncached Input (`input_tokens`)**    |      19,745,996 |         $1.50 |             $10.08 |             $19.54 |      **$29.62** |
+| **Cached Input (`cache_read_tokens`)** |     296,515,610 |        $0.075 |              $3.15 |             $19.09 |      **$22.24** |
+| **Output (`output_tokens`)**           |       2,456,922 |         $7.50 |              $2.09 |             $16.33 |      **$18.43** |
+| ├─ _Internal Thinking Tokens_          |     _1,124,298_ |       _$7.50_ |            _$1.32_ |            _$7.11_ |  _**(~$8.43)**_ |
+| └─ _Response & Tool-Call Tokens_       |     _1,332,624_ |       _$7.50_ |            _$0.77_ |            _$9.23_ | _**(~$10.00)**_ |
+| **Total**                              | **318,718,528** |             — | **$15.32** _(22%)_ | **$54.96** _(78%)_ |      **$70.28** |
 
 ### Telemetry by Workflow Stage
 
-| Stage | Subagents | Wall Window (CST) | LLM Calls | Total Tokens (In + Cache + Out) | Est. Cost |
-| :--- | ---: | :--- | ---: | ---: | ---: |
-| **Lead Orchestrator (Across All Stages)** | 1 | `01:07 – 05:06` | 176 | 48.97M | $15.32 |
-| **Stage 1: Parallel Source Acquisition** | 4 | `01:11 – 01:26` | 81 | 8.35M | $2.15 |
-| **Stage 2: Audited Ingestion, Review & Remediation** | 8 | `01:31 – 02:59` | 683 | 139.96M | $26.15 |
-| **Stage 4: 3-Statement + DCF Model & Review Loop** | 4 | `03:09 – 04:14` | 242 | 71.72M | $13.92 |
-| **Stage 5: Pitchbook Generation & Visual Review Loop** | 5 | `04:19 – 05:05` | 195 | 49.72M | $12.74 |
-| **Total** | **22** | **3h 58m** | **1,377** | **318.72M** | **$70.28** |
+| Stage                                                  | Subagents | Wall Window (CST) | LLM Calls | Total Tokens (In + Cache + Out) |  Est. Cost |
+| :----------------------------------------------------- | --------: | :---------------- | --------: | ------------------------------: | ---------: |
+| **Lead Orchestrator (Across All Stages)**              |         1 | `01:07 – 05:06`   |       176 |                          48.97M |     $15.32 |
+| **Stage 1: Parallel Source Acquisition**               |         4 | `01:11 – 01:26`   |        81 |                           8.35M |      $2.15 |
+| **Stage 2: Audited Ingestion, Review & Remediation**   |         8 | `01:31 – 02:59`   |       683 |                         139.96M |     $26.15 |
+| **Stage 4: 3-Statement + DCF Model & Review Loop**     |         4 | `03:09 – 04:14`   |       242 |                          71.72M |     $13.92 |
+| **Stage 5: Pitchbook Generation & Visual Review Loop** |         5 | `04:19 – 05:05`   |       195 |                          49.72M |     $12.74 |
+| **Total**                                              |    **22** | **3h 58m**        | **1,377** |                     **318.72M** | **$70.28** |
 
 > _Disclaimer: This write-up and the accompanying deliverables are AI-generated technical demonstrations of autonomous financial modeling with [`f8-engine`](https://github.com/mhcfa/f8) and do not constitute financial analysis or investment advice._

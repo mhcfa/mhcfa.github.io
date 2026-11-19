@@ -14,7 +14,7 @@ function formatDate(d: Date) {
 <BaseLayout title="mhcfa — Financial Analysis as Code & Autonomous Equity Research">
   <section class="hero">
     <div class="hero-eyebrow">Financial Engineering · AI Agents · Open Source</div>
-    <h1>Financial models as compiled code, not hand-edited spreadsheets.</h1>
+    <h1>Financial models as compiled code</h1>
     <p>
       I am a CFA charterholder working in private M&amp;A and project finance. I build open-source
       compilers and autonomous multi-agent workflows that turn institutional financial modeling and
@@ -38,9 +38,6 @@ function formatDate(d: Date) {
                 <span>·</span>
                 <span>{post.data.readingTime}</span>
               </>
-            )}
-            {post.data.featured && (
-              <span class="badge badge-red">Featured Research</span>
             )}
           </div>
           <h3>
@@ -70,13 +67,11 @@ function formatDate(d: Date) {
                 mhcfa/f8 ↗
               </a>
             </h3>
-            <span class="badge badge-green">Rust · Python · TypeScript</span>
           </div>
           <p class="project-desc">
             Author, verify, and automate financial models with code and AI agents, compiled into
-            live Excel (<code>.xlsx</code>) workbooks. Features a semantic 2D DSL, 6-pass Rust
-            compiler with Tarjan DAG cycle detection, in-memory formula evaluation, and verified
-            Excel parity across 34 functions.
+            live Excel workbooks. Features a semantic 2D DSL, 6-pass Rust
+            compiler, in-memory formula evaluation, and verified Excel parity.
           </p>
         </div>
         <div class="project-meta">
@@ -95,7 +90,6 @@ function formatDate(d: Date) {
                 mhcfa/faac
               </a>
             </h3>
-            <span class="badge">Open-Sourcing Soon</span>
           </div>
           <p class="project-desc">
             <strong>Financial Analysis as Code (FAAC)</strong> — Institutional 3-statement financial

@@ -129,12 +129,12 @@ compiled.save("forecast.xlsx")
 
 In-memory evaluated output:
 
-| Line Item | 2025A | 2026E | 2027E |
-| :--- | ---: | ---: | ---: |
-| Beginning Balance | $100.0 | $110.0 | $122.0 |
-| Capital Expenditures | $25.0 | $30.0 | $35.0 |
-| Depreciation | ($15.0) | ($18.0) | ($22.0) |
-| **Ending Balance** | **$110.0** | **$122.0** | **$135.0** |
+| Line Item            |      2025A |      2026E |      2027E |
+| :------------------- | ---------: | ---------: | ---------: |
+| Beginning Balance    |     $100.0 |     $110.0 |     $122.0 |
+| Capital Expenditures |      $25.0 |      $30.0 |      $35.0 |
+| Depreciation         |    ($15.0) |    ($18.0) |    ($22.0) |
+| **Ending Balance**   | **$110.0** | **$122.0** | **$135.0** |
 
 ---
 
@@ -154,15 +154,5 @@ Here are real-world deliverables compiled with `f8`:
 ![LBO Transaction Balance Sheet Bridge](/images/f8/lbo-transaction.png)
 
 ---
-
-## Trade-Offs of Treating `.xlsx` as a Compiled Output
-
-| What you gain | What you lose |
-| :--- | :--- |
-| Clean structure and strict schema | Hidden mistakes no one notices |
-| Git and line-by-line diffs | `Model_v14_Final_(2).xlsx` and guessing what changed since v13 |
-| Instant DAG and completeness verification in Rust | The opportunity to mess up your model right before a client meeting |
-| Superior AI modeling with in-memory assertions | Being an Excel Ninja |
-| Readable semantic code and logic | The joy of hunting down a hidden `#REF!` at 2 AM |
 
 Explore the repository, documentation, and bundled AI agent modeling skills at **[github.com/mhcfa/f8](https://github.com/mhcfa/f8)**.
