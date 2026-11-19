@@ -23,7 +23,7 @@ slideDeck:
 
 ## The Autonomous Run
 
-On November 17 at 1:07 AM, I kicked off an autonomous multi-agent research workflow (part of **FAAC — Financial Analysis as Code**, which I will be open-sourcing soon) with a three-sentence prompt:
+On November 17 at 1:07 AM, I kicked off an autonomous multi-agent research workflow (part of [**FAAC — Financial Analysis as Code**](https://github.com/mhcfa/faac), with the compiled Costco TypeScript model open-sourced in [`public-equity/costco`](https://github.com/mhcfa/faac/tree/main/public-equity/costco)) with a three-sentence prompt:
 
 > `/autonomous-research`
 >
